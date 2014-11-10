@@ -111,3 +111,32 @@ table(metadata1$Any_technology, metadata1$Gtube_Duodenaltube_Jtube.at.Discharge,
 table(metadata1$Any_technology, metadata1$VP_shunt_at.discharge, useNA = "ifany")
 
 table(metadata1$New_technology, metadata1$Any_technology, useNA = "ifany")
+
+##################################
+# Multi-Way Frequency Table
+load("C:\\Users\\zhago7\\Documents\\PatientDataCollections1.RData")
+temp <- table(metadata1$New_technology, 
+              metadata1$PICCnew_this_admission, 
+              metadata1$PICC_removed, 
+              metadata1$tracheostomy.This.admission., 
+              metadata1$foley_drain_placed.this.admission, 
+              metadata1$Gtube_placed.This.admission, 
+              metadata1$VP_shunt_new.this.admission, 
+              useNA = "ifany", 
+              dnn = c("New_technology", "PICCnew", "PICC_removed", 
+                      "tracheostomy", "foley", "Gtube", "VP_shunt")
+)
+ftable(temp)
+temp1 <- table(metadata1$Any_technology, 
+               metadata1$PICC_c.line_port, 
+               metadata1$PICC_removed, 
+               metadata1$Tracheostomy,
+               metadata1$Indwelling_foley_other_drain.at.discharge,
+               metadata1$Gtube_Duodenaltube_Jtube.at.Discharge,
+               metadata1$VP_shunt_at.discharge,
+               useNA = "ifany",
+               dnn = c("AnyTech", "PICCport", "PICCrmv", 
+                      "trach", "Indwe", 
+                      "Gtube", "VP")
+)
+ftable(temp1)
