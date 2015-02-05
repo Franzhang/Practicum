@@ -24,7 +24,7 @@ str(metadata1$VP_shunt_new.this.admission)
 for(i in 1:1250){
   if(!is.na(metadata1$PICCnew_this_admission[i])
      && metadata1$PICCnew_this_admission[i] == TRUE
-     && is.na(metadata1$PICC_removed[i])
+     && !is.na(metadata1$PICC_removed[i])
      && metadata1$PICC_removed[i] == FALSE){
     metadata1$New_technology[i] <- 1
   }
@@ -71,7 +71,7 @@ str(metadata1$VP_shunt_at.discharge)
 for(i in 1:1250){
   if(!is.na(metadata1$PICC_c.line_port[i])
      && metadata1$PICC_c.line_port[i] == TRUE
-     && is.na(metadata1$PICC_removed[i])
+     && !is.na(metadata1$PICC_removed[i])
      && metadata1$PICC_removed[i] == FALSE){
     metadata1$Any_technology[i] <- 1
   } 
@@ -93,9 +93,12 @@ for(i in 1:1250){
   }
   else metadata1$Any_technology[i] <- 0
 }
-  
+
+save(
 # output tables
-  
+table(metadata1$PICCnew_this_admission, metadata1$PICC_removed)
+
+ 
 table(metadata1$New_technology, metadata1$PICCnew_this_admission, useNA = "ifany")
 table(metadata1$New_technology, metadata1$PICC_removed, useNA = "ifany")
 table(metadata1$New_technology, metadata1$tracheostomy.This.admission., useNA = "ifany")
@@ -114,7 +117,7 @@ table(metadata1$New_technology, metadata1$Any_technology, useNA = "ifany")
 
 ##################################
 # Multi-Way Frequency Table
-load("C:\\Users\\zhago7\\Documents\\PatientDataCollections1.RData")
+load("C:\\Users\\zhago7\\Documents\\PatientDataCollections.RData")
 temp <- table(metadata1$New_technology, 
               metadata1$PICCnew_this_admission, 
               metadata1$PICC_removed, 
@@ -136,7 +139,7 @@ temp1 <- table(metadata1$Any_technology,
                metadata1$VP_shunt_at.discharge,
                useNA = "ifany",
                dnn = c("AnyTech", "PICCport", "PICCrmv", 
-                      "trach", "Indwe", 
-                      "Gtube", "VP")
+                      "trach", "IndwellingDischarge", 
+                      "GtubeDischarge", "VPshuntDischarge")
 )
 ftable(temp1)
