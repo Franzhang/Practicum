@@ -1,4 +1,4 @@
-Enter file contents here# NewTech from original dataset
+# NewTech from original dataset
 # Import data from Original Dataset
 library(foreign)
 RepairedData <- read.dta("handrepairedcasecontroldataset.dta")
