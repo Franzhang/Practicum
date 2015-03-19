@@ -7,7 +7,7 @@ dump <- which(is.na(RepairedData$pair) == TRUE)
 RepairedData <- RepairedData[-dump, ]
 # 1230 rows 177 columns are valid
 
-# variables 64, 65, 67, 70, 72, 78
+# variables 64, 65, 67, 68, 70, 72, 71, 78, 77
 # check values
 table(RepairedData$PICCnew_this_admission, useNA = "ifany")
 table(RepairedData$PICC_removed, useNA = "ifany")
@@ -31,22 +31,29 @@ for(i in 1:1230){
     RepairedData$NewTech[i] <- 1
   } 
   else if(!is.na(RepairedData$foley_drain_placedthisadmission[i])
-          && RepairedData$foley_drain_placedthisadmission[i] == TRUE){
+          && RepairedData$foley_drain_placedthisadmission[i] == TRUE
+          && RepairedData$Indwelling_foley_other_drainatd[i] == TRUE){
     RepairedData$NewTech[i] <- 1
   }
   else if(!is.na(RepairedData$Gtube_placedThisadmission[i])
-          && RepairedData$Gtube_placedThisadmission[i] == TRUE){
+          && RepairedData$Gtube_placedThisadmission[i] == TRUE
+          && RepairedData$Gtube_Duodenaltube_JtubeatDisch[i] == TRUE){
     RepairedData$NewTech[i] <- 1
   }
   else if(!is.na(RepairedData$VP_shunt_newthisadmission[i])
-          && RepairedData$VP_shunt_newthisadmission[i] == TRUE){
+          && RepairedData$VP_shunt_newthisadmission[i] == TRUE
+          && RepairedData$VP_shunt_atdischarge[i] == TRUE){
+    RepairedData$NewTech[i] <- 1
+  }
+  else if(RepairedData$Ngtubethisadmission[i] == TRUE
+          && RepairedData$NG_NJ_NDatdischarge[i] == TRUE){
     RepairedData$NewTech[i] <- 1
   }
   else RepairedData$NewTech[i] <- 0
 }
 
 ## Check
-Check <- RepairedData[,c(64, 65, 67, 70, 72, 78, 178)]
+Check <- RepairedData[,c(64, 65, 67, 68, 70, 72, 71, 78, 77, 74, 73, 178)]
 fix(Check)
 
 #############################
@@ -88,10 +95,13 @@ for(i in 1:1230){
           && RepairedData$VP_shunt_atdischarge[i] == TRUE){
     RepairedData$AnyTech[i] <- 1
   }
+  else if(RepairedData$NG_NJ_NDatdischarge[i] == TRUE){
+    RepairedData$AnyTech[i] <- 1
+  }
   else RepairedData$AnyTech[i] <- 0
 }
 ## Check
-Check1 <- RepairedData[,c(62, 65, 66, 68, 71, 77, 179)]
+Check1 <- RepairedData[,c(62, 65, 66, 68, 71, 77, 73, 179)]
 fix(Check1)
 
 # output tables
@@ -118,8 +128,10 @@ colnames(RepairedData)[3] <- "case"
 library(survival)
 yf6 <- clogit(case ~ NewTech + strata(pair), data = RepairedData)
 yf7 <- clogit(case ~ AnyTech + strata(pair), data = RepairedData)
+yf8 <- clogit(case ~ Will_TPN_PPN_continue + strata(pair), data = RepairedData)
 summary(yf6)
 summary(yf7)
+summary(yf8)
 
 ################## END ######################
   # Multi-Way Frequency Table
